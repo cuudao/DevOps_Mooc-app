@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-app
+  template:
+    metadata:
+      labels:
+        app: devops-app
+    spec:
+      containers:
+      - name: devops-app
+        image: devops-app:0.1  # Use the correct image name and tag
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8081  # Ensure this matches your application's port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-app-service
+spec:
+  selector:
+    app: devops-app
+  ports:
+    - protocol: TCP
+      port: 8081  # The port that will be exposed outside the service
+      targetPort: 8081  # The port on which the application is running
+  type: ClusterIP  # This is suitable if you only need internal access; change to LoadBalancer if external access is needed
